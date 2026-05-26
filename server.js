@@ -22,8 +22,11 @@ const getAllowedOrigins = () => {
   const origins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://dashboard.shopsheap.online',
-    'https://api.shopsheap.online',
+    'http://localhost:3113',
+    'https://lhu-dashboard.me',
+    'http://lhu-dashboard.me',
+    'https://api.lhu-dashboard.me',
+    'http://api.lhu-dashboard.me',
   ];
 
   if (FRONTEND_URL) {
@@ -31,9 +34,7 @@ const getAllowedOrigins = () => {
     origins.push(...urls);
   }
 
-  const uniqueOrigins = [...new Set(origins)];
-  console.log('Allowed CORS origins:', uniqueOrigins);
-  return uniqueOrigins;
+  return [...new Set(origins)];
 };
 
 app.use(helmet({
@@ -45,16 +46,13 @@ const corsOptions = {
     const allowedOrigins = getAllowedOrigins();
 
     if (!origin) {
-      console.log('Request with no origin - allowing');
       return callback(null, true);
     }
 
     if (allowedOrigins.includes(origin)) {
-      console.log(`CORS allowed for origin: ${origin}`);
       callback(null, true);
     } else {
-      console.log(`CORS blocked for origin: ${origin}`);
-      console.log('Allowed origins:', allowedOrigins);
+      console.warn(`CORS blocked for origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -119,7 +117,6 @@ app.use((req, res) => {
 
 app.listen(PORT, async () => {
   console.log(`Server dang chay tai http://localhost:${PORT}`);
-  console.log('Testing database connection...');
 
   const dbConnected = await testConnection();
 

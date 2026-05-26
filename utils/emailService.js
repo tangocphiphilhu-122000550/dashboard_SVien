@@ -31,11 +31,6 @@ const getSmtpConfig = () => ({
 
 const logEmailFallback = ({ to, subject, textContent }) => {
   console.warn('Brevo API key chưa được cấu hình. Chỉ log nội dung email để test local.');
-  console.log('Email content:', {
-    to,
-    subject,
-    body: textContent,
-  });
 
   return {
     success: true,
@@ -69,13 +64,6 @@ const sendEmailViaBrevoAPI = async ({ to, toName, subject, htmlContent, textCont
   };
 
   try {
-    console.log('Sending email via Brevo API...');
-    console.log('Email details:', {
-      to,
-      subject,
-      from: emailFrom,
-    });
-
     const response = await fetch(BREVO_API_URL, {
       method: 'POST',
       headers: {
@@ -93,12 +81,6 @@ const sendEmailViaBrevoAPI = async ({ to, toName, subject, htmlContent, textCont
       const message = responseData?.message || responseData?.error || response.statusText;
       throw new Error(`Brevo API error: ${message} (${response.status})`);
     }
-
-    console.log('Email sent via Brevo API successfully');
-    console.log('Brevo response:', {
-      messageId: responseData?.messageId,
-      status: response.status,
-    });
 
     return {
       success: true,
@@ -124,13 +106,6 @@ const sendEmailViaBrevoSMTP = async ({ to, toName, subject, htmlContent, textCon
   }
 
   try {
-    console.log('Sending email via Brevo SMTP...');
-    console.log('Email details:', {
-      to,
-      subject,
-      from: emailFrom,
-    });
-
     const transporter = nodemailer.createTransport({
       host: smtpConfig.host,
       port: smtpConfig.port,
@@ -147,13 +122,6 @@ const sendEmailViaBrevoSMTP = async ({ to, toName, subject, htmlContent, textCon
       subject,
       html: htmlContent,
       text: plainText,
-    });
-
-    console.log('Email sent via Brevo SMTP successfully');
-    console.log('Brevo SMTP response:', {
-      messageId: response.messageId,
-      accepted: response.accepted,
-      rejected: response.rejected,
     });
 
     return {
@@ -208,7 +176,6 @@ Trân trọng,
 ${DEFAULT_SENDER_NAME}
     `;
 
-    console.log(`Attempting to send MSSV email to: ${email}`);
     return sendEmail({
       to: email,
       toName: fullName,
@@ -304,7 +271,6 @@ Trân trọng,
 ${DEFAULT_SENDER_NAME}
     `;
 
-    console.log(`Attempting to send reset password email to: ${email}`);
     return sendEmail({
       to: email,
       toName: fullName,
@@ -499,7 +465,6 @@ Trân trọng,
 ${DEFAULT_SENDER_NAME}
     `;
 
-    console.log(`Attempting to send overdue exercise email to: ${email}`);
     return sendEmail({
       to: email,
       toName: displayName,
