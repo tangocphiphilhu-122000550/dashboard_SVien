@@ -12,8 +12,17 @@ const getResetTokenFromUrl = () => {
     return '';
   }
 
-  const params = new URLSearchParams(window.location.search);
-  return params.get('token') || params.get('reset_token') || '';
+  const currentUrl = new URL(window.location.href);
+  const token = currentUrl.searchParams.get('token') || currentUrl.searchParams.get('reset_token') || '';
+
+  if (token) {
+    currentUrl.searchParams.delete('token');
+    currentUrl.searchParams.delete('reset_token');
+    const cleanUrl = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }
+
+  return token;
 };
 
 const getInitialMode = () => (getResetTokenFromUrl() ? 'reset' : 'login');

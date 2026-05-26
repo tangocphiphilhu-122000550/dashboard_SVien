@@ -107,17 +107,12 @@ const Courses = ({ setCurrentPage }) => {
   }, [selectedRoadmap]);
 
   const handleEnroll = (courseId) => {
-    console.log('🔵 handleEnroll called with courseId:', courseId);
-    console.log('🔵 Current enrolledCourseIds:', enrolledCourseIds);
-    
     setEnrolledCourseIds((current) => {
       if (current.includes(courseId)) {
-        console.log('⚠️ Already enrolled, skipping');
         return current;
       }
+
       const newIds = [...current, courseId];
-      console.log('✅ New enrolledCourseIds:', newIds);
-      // Save to localStorage immediately
       setStoredEnrolledCourseIds(newIds);
       return newIds;
     });

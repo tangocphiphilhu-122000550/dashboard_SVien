@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { courseExerciseCatalog, studentMock } from '../data/trainingMockData';
 import { getTrainingSelectionSnapshot, subscribeTrainingSelection } from '../trainingSelection';
-import { formatDateTime } from '../exerciseProgress';
 
 const achievementCards = [
   {

@@ -212,10 +212,7 @@ const Exercises = () => {
     }
   };
 
-  const handleCompleteExercise = () => {
-    if (!userKey || !selectedExercise) return;
-    completeExercise(userKey, selectedExercise.id);
-  };
+
 
   const handleReopenExercise = () => {
     if (!userKey || !selectedExercise) return;
@@ -259,8 +256,34 @@ const Exercises = () => {
   };
 
   const closeGradingModal = () => {
+    // Close modal and remove persisted grading marker
     localStorage.removeItem(GRADING_KEY);
     setShowGradingModal(false);
+
+    // After the user sees their score, automatically open the next unlocked exercise
+    try {
+      if (!selectedExercise) return;
+      const currentList = Array.isArray(filteredExercises) ? filteredExercises : [];
+      const currentIndex = currentList.findIndex((ex) => ex.id === selectedExercise.id);
+      if (currentIndex === -1) return;
+
+      // Find next exercise that is not locked
+      for (let i = currentIndex + 1; i < currentList.length; i += 1) {
+        const nextEx = currentList[i];
+        if (!nextEx) continue;
+        if (nextEx.status && nextEx.status === 'Khóa') continue;
+
+        // Select next exercise
+        setSelectedExerciseId(nextEx.id);
+        setSubmissionCode(nextEx.starterCode || '');
+        if (userKey) startExercise(userKey, nextEx);
+        // persist preference
+        setStoredPreferredExerciseId(nextEx.id);
+        break;
+      }
+    } catch (e) {
+      // ignore errors - advancing is a convenience, not critical
+    }
   };
 
   const handleSubmit = () => {
@@ -471,15 +494,7 @@ const Exercises = () => {
                     ) : null}
 
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {selectedStatus !== 'completed' ? (
-                        <button
-                          type="button"
-                          onClick={handleCompleteExercise}
-                          className="rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-emerald-700"
-                        >
-                          Đánh dấu hoàn thành
-                        </button>
-                      ) : (
+                      {selectedStatus === 'completed' ? (
                         <button
                           type="button"
                           onClick={handleReopenExercise}
@@ -487,7 +502,8 @@ const Exercises = () => {
                         >
                           Mở lại bài
                         </button>
-                      )}
+                      ) : null}
+
                       <button
                         type="button"
                         onClick={handleSimulateOverdue}

@@ -17,7 +17,7 @@ const getCurrentLevel = (difficulty) => {
       return 2;
   }
 };
-
+ 
 const getProgressPercent = (course, currentLevel) => {
   const occupancy = course.maxStudents ? Math.round((course.enrolled / course.maxStudents) * 100) : 50;
   return Math.max(18, Math.min(78, occupancy - 8 + currentLevel * 6));

@@ -134,5 +134,4 @@ MIT License - Tự do sử dụng cho mục đích học tập và phát triển
 
 ---
 
-**Developed with ❤️ using React & Tailwind CSS**
 

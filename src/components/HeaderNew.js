@@ -78,7 +78,7 @@ const normalizeSearchText = (value) =>
 const highlightMatch = (text, query) => {
   if (!text) return '';
   if (!query) return text;
-  const regex = new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+  const regex = new RegExp(`(${query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
   const parts = text.split(regex);
   return (
     <>
